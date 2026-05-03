@@ -2,6 +2,9 @@
 <project version="4">
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="HW-Modul14-Dev" options="-parameters" />
+      <module name="HW-Modul14-Dev.main" options="-parameters" />
+      <module name="HW-Modul14-Dev.test" options="-parameters" />
       <module name="com.example.HW-Modul14-Dev" options="-parameters" />
       <module name="com.example.HW-Modul14-Dev.main" options="-parameters" />
       <module name="com.example.HW-Modul14-Dev.test" options="-parameters" />
