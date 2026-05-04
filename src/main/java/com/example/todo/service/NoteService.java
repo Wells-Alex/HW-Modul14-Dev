@@ -1,61 +1,17 @@
 package com.example.todo.service;
 
 import com.example.todo.model.Note;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
-@Service
-public class NoteService {
+public interface NoteService {
+    List<Note> listAll();
 
-    private final Map<Long, Note> notes = new HashMap<>();
+    Note add(Note note);
 
-    public List<Note> listAll() {
-        return new ArrayList<>(notes.values());
-    }
+    void deleteById(long id);
 
-    public Note add(Note note) {
+    void update(Note note);
 
-        long id = new Random().nextLong();
-
-        note.setId(id);
-
-        notes.put(id, note);
-
-        return note;
-    }
-
-    public void deleteById(long id) {
-
-        if (!notes.containsKey(id)) {
-            throw new NoSuchElementException("Note not found");
-        }
-
-        notes.remove(id);
-    }
-
-    public void update(Note note) {
-
-        long id = note.getId();
-
-        if (!notes.containsKey(id)) {
-            throw new NoSuchElementException("Note not found");
-        }
-
-        Note existingNote = notes.get(id);
-
-        existingNote.setTitle(note.getTitle());
-        existingNote.setContent(note.getContent());
-    }
-
-    public Note getById(long id) {
-
-        Note note = notes.get(id);
-
-        if (note == null) {
-            throw new NoSuchElementException("Note not found");
-        }
-
-        return note;
-    }
+    Note getById(long id);
 }
