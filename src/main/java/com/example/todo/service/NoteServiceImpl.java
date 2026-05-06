@@ -56,4 +56,10 @@ public class NoteServiceImpl implements NoteService {
 
         return note;
     }
+
+    public NoteServiceImpl() {
+        add(new Note(0, "Test 1", "Content 1"));
+        add(new Note(0, "Test 2", "Content 2"));
+    }
+
 }
