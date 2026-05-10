@@ -1,24 +1,23 @@
-package com.example.todo.model;
+package com.example.todo.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@Entity
-@Table(name = "note")
-public class Note {
+public class NoteDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title must not be empty")
+    @Size(max = 255)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Content must not be empty")
     private String content;
 
-    public Note() {
+    public NoteDto() {
     }
 
-    public Note(Long id, String title, String content) {
+    public NoteDto(Long id, String title, String content) {
         this.id = id;
         this.title = title;
         this.content = content;

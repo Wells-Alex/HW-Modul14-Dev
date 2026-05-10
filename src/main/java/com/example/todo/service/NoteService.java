@@ -1,17 +1,18 @@
 package com.example.todo.service;
 
-import com.example.todo.model.Note;
+import com.example.todo.dto.NoteDto;
 
 import java.util.List;
 
 public interface NoteService {
-    List<Note> listAll();
 
-    Note add(Note note);
+    List<NoteDto> listAll();
 
-    void deleteById(long id);
+    NoteDto getById(Long id);
 
-    void update(Note note);
+    NoteDto add(NoteDto dto);
 
-    Note getById(long id);
+    NoteDto update(NoteDto dto);
+
+    void deleteById(Long id);
 }

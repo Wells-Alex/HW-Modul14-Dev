@@ -1,65 +1,64 @@
 package com.example.todo.service;
 
+import com.example.todo.dto.NoteDto;
 import com.example.todo.exception.NoteNotFoundException;
+import com.example.todo.mapper.NoteMapper;
 import com.example.todo.model.Note;
+import com.example.todo.repository.NoteRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class NoteServiceImpl implements NoteService {
 
-    private final Map<Long, Note> notes = new HashMap<>();
-    private long nextId = 1;
+    private final NoteRepository repository;
 
-    @Override
-    public List<Note> listAll() {
-        return new ArrayList<>(notes.values());
+    public NoteServiceImpl(NoteRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public Note add(Note note) {
-        note.setId(nextId++);
-        notes.put(note.getId(), note);
-        return note;
+    public List<NoteDto> listAll() {
+        return repository.findAll()
+                .stream()
+                .map(NoteMapper::toDto)
+                .toList();
     }
 
     @Override
-    public void deleteById(long id) {
-        if (!notes.containsKey(id)) {
+    public NoteDto getById(Long id) {
+        return repository.findById(id)
+                .map(NoteMapper::toDto)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
+    }
+
+    @Override
+    public NoteDto add(NoteDto dto) {
+        Note saved = repository.save(NoteMapper.toEntity(dto));
+        return NoteMapper.toDto(saved);
+    }
+
+    @Override
+    public NoteDto update(NoteDto dto) {
+        if (!repository.existsById(dto.getId())) {
             throw new NoteNotFoundException("Note not found");
         }
 
-        notes.remove(id);
+        return NoteMapper.toDto(
+                repository.save(NoteMapper.toEntity(dto))
+        );
     }
 
     @Override
-    public void update(Note note) {
-        long id = note.getId();
-
-        if (!notes.containsKey(id)) {
-            throw new NoteNotFoundException("Note not found");
-        }
-
-        Note existingNote = notes.get(id);
-        existingNote.setTitle(note.getTitle());
-        existingNote.setContent(note.getContent());
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 
-    @Override
-    public Note getById(long id) {
-        Note note = notes.get(id);
-
-        if (note == null) {
-            throw new NoteNotFoundException("Note not found");
-        }
-
-        return note;
+    @PostConstruct
+    public void init() {
+        add(new NoteDto(null, "Test 1", "Content 1"));
+        add(new NoteDto(null, "Test 2", "Content 2"));
     }
-
-    public NoteServiceImpl() {
-        add(new Note(0, "Test 1", "Content 1"));
-        add(new Note(0, "Test 2", "Content 2"));
-    }
-
 }
